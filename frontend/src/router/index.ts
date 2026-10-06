@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Dashboard from '@/views/Dashboard.vue'
+const Handover = () => import('@/views/handover/index.vue')
 const Stand = () => import('@/views/stand/index.vue')
 const Bridge = () => import('@/views/bridge/index.vue')
 const GroundPower = () => import('@/views/ground_power/index.vue')
@@ -24,6 +25,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', name: 'dashboard', component: Dashboard },
+    { path: '/handover', name: 'handover', component: Handover },
     { path: '/stand', name: 'stand', component: Stand },
     { path: '/bridge', name: 'bridge', component: Bridge },
     { path: '/ground_power', name: 'ground_power', component: GroundPower },

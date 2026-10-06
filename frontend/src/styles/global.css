@@ -35,3 +35,36 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .error-text { color: #b42318; }
 .status-legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 10px; font-size: 12px; color: var(--muted); }
 .legend-item { background: #eef2f7; border-radius: 999px; padding: 2px 10px; }
+
+/* 运营概览：页签 / 航站楼态势 / 交班工作台 */
+.tab-bar { display: flex; gap: 8px; margin: 12px 0; border-bottom: 1px solid var(--border); }
+.tab-btn { border: none; background: none; padding: 8px 14px; font-size: 13px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tab-btn.active { color: var(--brand); border-bottom-color: var(--brand); font-weight: 600; }
+.area-block { margin-bottom: 18px; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+.area-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.area-head h3 { margin: 0; font-size: 15px; }
+.area-sum { display: flex; gap: 14px; font-size: 12px; color: var(--muted); }
+.area-sum b { color: #1f2937; }
+.num-warn { color: #b42318; font-weight: 600; }
+.num-pending { color: #b54708; font-weight: 600; }
+.conclusion-banner { background: #eef6ff; border: 1px solid #bcd9fc; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 13px; }
+.conclusion-banner .meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+.board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.board-cell { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.board-cell.locked { background: #f8fafc; border-style: dashed; }
+.board-cell.stale { border-color: #f0b429; }
+.cell-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.cell-title { font-size: 13px; font-weight: 600; }
+.cell-tag { font-size: 11px; border-radius: 999px; padding: 1px 8px; background: #e2e8f0; color: #475569; }
+.cell-tag.locked-tag { background: #dbeafe; color: #1d4ed8; }
+.cell-tag.stale-tag { background: #fef3c7; color: #92400e; }
+.cell-metrics { display: flex; gap: 10px; font-size: 12px; color: var(--muted); }
+.cell-metrics b { color: #1f2937; font-size: 14px; }
+.cell-actions { display: flex; gap: 4px; flex-wrap: wrap; }
+.cell-actions .link { font-size: 12px; }
+.cell-note { width: 100%; font-size: 12px; border: 1px solid var(--border); border-radius: 6px; padding: 4px 6px; font-family: inherit; }
+.board-toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+.board-toolbar label { font-size: 12px; color: var(--muted); }
+.seal-box { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-top: 14px; }
+.seal-box textarea { width: 100%; min-height: 56px; border: 1px solid var(--border); border-radius: 6px; padding: 8px; font-family: inherit; font-size: 13px; }
+.handover-badge { display: inline-block; margin-left: 6px; font-size: 11px; color: #b54708; background: #fef3c7; border-radius: 999px; padding: 0 8px; }

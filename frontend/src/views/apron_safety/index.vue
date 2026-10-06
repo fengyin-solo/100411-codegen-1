@@ -43,7 +43,13 @@
       </thead>
       <tbody>
         <tr v-for="row in rows" :key="String(row.id)">
-          <td v-for="column in columns" :key="column">{{ row[column] ?? '—' }}</td>
+          <td v-for="column in columns" :key="column">
+            <template v-if="column === '安全状态' && row['来源交班']">
+              <span>{{ row[column] ?? '—' }}</span>
+              <span class="handover-badge">交班待办</span>
+            </template>
+            <template v-else>{{ row[column] ?? '—' }}</template>
+          </td>
           <td>{{ row.status }}</td>
           <td class="row-actions">
             <button

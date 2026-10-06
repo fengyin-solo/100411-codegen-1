@@ -1,5 +1,8 @@
-import { MODULE_BY_KEY } from '@/data/modules'
+import { MODULE_BY_KEY, MODULES } from '@/data/modules'
+import { AREAS, AREA_NAME, resolveArea } from '@/data/areas'
 import { allRows, listRows, resetRows, saveRows } from '@/data/local-store'
+import { currentRuleVersion, latestConclusion } from '@/api/handover'
+import { computeMetrics } from '@/data/stats'
 import type { ActionResult, EntryRow, ModuleMeta, OverviewResult, PageResult } from '@/data/types'
 
 // 会写进数据的「往回走」动作：命中就把这条记录标成异常态，看板上能一眼看出来。
@@ -86,13 +89,29 @@ export function downloadEntries(key: string): void {
 
 export function loadOverview(): OverviewResult {
   const rows = allRows()
-  const modules = [...MODULE_BY_KEY.values()].map((meta) => {
+  const ruleVersion = currentRuleVersion()
+  const modules = MODULES.map((meta) => {
     const entries = rows[meta.key] ?? []
     return {
       name: meta.name,
-      created: entries.length,
-      pending: entries.filter((row) => row.pending).length,
-      abnormal: entries.filter((row) => row.abnormal).length,
+      ...computeMetrics(entries, ruleVersion),
+    }
+  })
+  // 航站楼态势：每个模块在 T1/T2 各归一行格子，区域口径与交班工作台完全一致。
+  const areas = AREAS.map((area) => {
+    const areaModules = MODULES.map((meta) => {
+      const scoped = (rows[meta.key] ?? []).filter(
+        (row) => resolveArea(meta.key, row).area === area.key,
+      )
+      return { key: meta.key, name: meta.name, ...computeMetrics(scoped, ruleVersion) }
+    })
+    return {
+      area: area.key,
+      name: AREA_NAME[area.key],
+      created: areaModules.reduce((sum, item) => sum + item.created, 0),
+      pending: areaModules.reduce((sum, item) => sum + item.pending, 0),
+      abnormal: areaModules.reduce((sum, item) => sum + item.abnormal, 0),
+      modules: areaModules,
     }
   })
   const cards = [
@@ -101,5 +120,6 @@ export function loadOverview(): OverviewResult {
     { label: '待处理', value: modules.reduce((sum, item) => sum + item.pending, 0) },
     { label: '异常量', value: modules.reduce((sum, item) => sum + item.abnormal, 0) },
   ]
-  return { cards, modules }
+  // 概览呈现与保障清单共用同一份结论：始终读最近一次封存的交班文档。
+  return { cards, modules, areas, conclusion: latestConclusion() }
 }
