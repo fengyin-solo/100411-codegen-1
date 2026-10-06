@@ -14,7 +14,7 @@
     <div class="stat-row">
       <article v-for="item in stats" :key="item.label" class="stat-card">
         <span class="stat-label">{{ item.label }}</span>
-        <strong class="stat-value">{{ item.value }}</strong>
+        <strong class="stat-value" :class="item.danger ? 'metric-abnormal' : ''">{{ item.value }}</strong>
       </article>
     </div>
 
@@ -43,7 +43,12 @@
       </thead>
       <tbody>
         <tr v-for="row in rows" :key="String(row.id)">
-          <td v-for="column in columns" :key="column">{{ row[column] ?? '—' }}</td>
+          <td v-for="column in columns" :key="column">
+            {{ row[column] ?? '—' }}<span
+              v-if="column === columns[0] && row['来源班次']"
+              class="todo-tag"
+            >交班待办</span>
+          </td>
           <td>{{ row.status }}</td>
           <td class="row-actions">
             <button
@@ -85,13 +90,18 @@ const meta = moduleMeta('apron_safety')
 const columns = ["巡查编号", "巡查区域", "巡查人员", "巡查日期", "发现问题", "整改措施", "复查结果", "安全状态"]
 const actions = ["记录巡查", "安排整改", "确认闭环"]
 const statuses = ["待巡查", "已巡查", "待整改", "已闭环"]
-const stats = [{"label": "今日巡查", "value": 0}, {"label": "待整改问题", "value": 0}, {"label": "已闭环问题", "value": 0}]
 
 const rows = ref<EntryRow[]>([])
 const total = ref(0)
 const errorMessage = ref('')
 const filters = ref<Record<string, string>>({})
 const filterFields = columns.slice(0, 3)
+const stats = computed(() => [
+  { label: "在册巡查", value: rows.value.length, danger: false },
+  { label: "待整改问题", value: rows.value.filter((row) => String(row.status) === '待整改').length, danger: true },
+  { label: "交班待办", value: rows.value.filter((row) => row['来源班次']).length, danger: true },
+  { label: "已闭环问题", value: rows.value.filter((row) => String(row.status) === '已闭环').length, danger: false },
+])
 const statusSummary = computed(() =>
   statuses.map((status: string) => ({
     status,
